@@ -1,0 +1,11 @@
+{
+  "name": "voteapp",
+  "version": "1.0.0",
+  "description": "vote app for free code camp",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mateusz Szymański",
+  "license": "MIT"
+}
