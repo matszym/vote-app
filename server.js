@@ -37,6 +37,7 @@ app.get('/auth/twitter/callback',
 );
 
 require('./routes/poll.server.routes.js')(app);
+require('./routes/index.server.routes.js')(app);
 
 server = app.listen(config.port);
 console.log('Server is listening on', config.port);
