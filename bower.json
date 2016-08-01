@@ -1,0 +1,23 @@
+{
+  "name": "voteapp",
+  "description": "vote app for free code camp",
+  "main": "server.js",
+  "authors": [
+    "Mateusz Szymański"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/matszym/vote-app",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "bootstrap": "^3.3.7"
+  }
+}
