@@ -22,7 +22,10 @@ app.use(session({
   secret: config.sessionSecret,
   store: new MongoStore({
     mongooseConnection: mongoose.connection
-  })
+  }),
+  resave: false,
+  saveUninitialized: true
+
 }));
 app.use(passport.initialize());
 app.get('/auth/twitter', passport.authenticate('twitter'));
@@ -32,6 +35,8 @@ app.get('/auth/twitter/callback',
     res.redirect('/');
   }
 );
+
+require('./routes/poll.server.routes.js')(app);
 
 server = app.listen(config.port);
 console.log('Server is listening on', config.port);
