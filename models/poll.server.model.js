@@ -20,7 +20,7 @@ pollSchema = new Schema({
     option: {
       type: String,
       valdiate: {
-        validator: v => this.options.indexOf(v) !== -1;
+        validator: v => this.options.indexOf(v) !== -1
       },
       message: 'Option doesn\'t exist'
     },
