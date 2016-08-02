@@ -19,6 +19,11 @@
     "passport-twitter": "1.0.4"
   },
   "devDependencies": {
-    "gulp": "3.9.1"
+    "babel-preset-es2015": "6.9.0",
+    "gulp": "3.9.1",
+    "gulp-babel": "6.1.2",
+    "gulp-concat": "2.6.0",
+    "gulp-jsmin": "0.1.5",
+    "gulp-sourcemaps": "1.6.0"
   }
 }
