@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Vote Application</title>
-  <script src="../public/lib/angular.angular.min.js"></script>
+  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+  <script src="lib/angular/angular.min.js"></script>
+  <script src="lib/angular-route/angular-route.min.js"></script>
 </head>
-<body>
-  <a href="/auth/twitter">Log in with Twitter</a>
-
+<body data-ng-app="vote-app" data-ng-controller="AuthenticationController">
+  <navigation></navigation>
+  <data-ng-view></data-ng-view>
   <% include footer.server.view.ejs %>
+  <script src="vote-app.min.js"></script>
 </body>
 </html>
