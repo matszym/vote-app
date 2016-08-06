@@ -11,6 +11,6 @@ angular.module('vote-app')
     templateUrl: 'views/my-polls.client.view.html'
   })
   .otherwise('/', {
-    redirect
+    redirect: '/'
   })
 }]);
