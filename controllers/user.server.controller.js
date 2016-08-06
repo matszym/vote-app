@@ -40,3 +40,15 @@ exports.isAuthenticated = (req, res, next) => {
     next();
   }
 }
+
+exports.getUser = (req, res) => {
+  res.send(req.user || {});
+}
+
+exports.logOut = (req, res) => {
+  req.logOut();
+  res.send([{
+    content: 'User has been logged out',
+    type: 'success'
+  }]);
+}
