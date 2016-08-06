@@ -1,1 +1,1 @@
-angular.module('vote-app', ['navigation', 'authentication']);
+angular.module('vote-app', ['navigation', 'authentication', 'ngRoute']);
