@@ -45,6 +45,7 @@ app.get('/auth/twitter/callback',
 require('./routes/poll.server.routes.js')(app);
 require('./routes/index.server.routes.js')(app);
 require('./routes/auth.server.routes.js')(app);
+require('./routes/angular.server.routes.js')(app);
 
 app.use(express.static('public'));
 
