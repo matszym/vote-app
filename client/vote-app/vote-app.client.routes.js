@@ -1,5 +1,5 @@
 angular.module('vote-app')
-.config(['$routeProvider', $routeProvider => {
+.config(['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) => {
   $routeProvider
   .when('/', {
     templateUrl: 'views/all-polls.client.view.html'
@@ -12,5 +12,7 @@ angular.module('vote-app')
   })
   .otherwise('/', {
     redirect: '/'
-  })
+  });
+
+  $locationProvider.html5Mode(true);
 }]);
