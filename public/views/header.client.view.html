@@ -13,9 +13,9 @@
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav pull-right">
           <li class="active nav"><a href="/">Home</a></li>
-          <li data-ng-show="auth.user.isAuthenticated"><a href="">My Polls</a></li>
-          <li data-ng-show="auth.user.isAuthenticated"><a href="">New Pool</a></li>
-          <li data-ng-show="auth.user.isAuthenticated"><a href="#" data-ng-click="logOut()" data-ng-bind="auth.user.name"></a></li>
+          <li data-ng-show="auth.user.isAuthenticated"><a href="/my-polls">My Polls</a></li>
+          <li data-ng-show="auth.user.isAuthenticated"><a href="/new-poll">New Pool</a></li>
+          <li data-ng-show="auth.user.isAuthenticated"><a href="" data-ng-click="logOut()" data-ng-bind="auth.user.name"></a></li>
           <li class="navbar-form" data-ng-hide="auth.user.isAuthenticated"><a href="auth/twitter" target="_blank"><button class="btn btn-primary btn-nav" type="button">Log in with twitter</button></a>
           </li>
         </ul>
