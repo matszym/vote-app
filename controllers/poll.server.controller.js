@@ -4,10 +4,14 @@ const Poll = require('../models/poll.server.model.js'),
 msg = require('./message.server.controller.js');
 
 exports.createPoll = (req, res) => {
-  Poll.createAsync(req.body.poll)
+  console.log(req.user);
+
+  req.body._creator = req.user._id;
+
+  Poll.createAsync(req.body)
   .then(poll => {
     res
-    .send(msg('Your poll was created.'))
+    .send(poll);
   })
   .catch(err => {
     res
