@@ -3,7 +3,9 @@ angular.module('vote-app')
   $scope.user = user.getUser();
   $scope.vote = "";
   poll.getPoll($scope);
+  
   $scope.votePoll = poll.votePoll.bind(null, $scope);
+  $scope.deletePoll = poll.deletePoll;
 
   $scope.$on('user', (event, user) => {
     $scope.user = user;

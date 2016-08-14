@@ -74,6 +74,15 @@ angular.module('vote-app')
         throw err;
       });
     },
+    deletePoll: id => {
+      $http.delete(`/api/poll/${$routeparams.id}`)
+      .then(result => {
+        $location.path('/my-polls');
+      })
+      .catch(err => {
+        throw err;
+      })
+    },
     votePoll: scope => {
       let vote = "";
       
