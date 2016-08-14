@@ -12,7 +12,6 @@ angular.module('vote-app')
       label: "I'd like custom option",
       value: null
     });
-
     return {
       title: obj.data.title,
       labels: obj.data.options,
@@ -23,7 +22,8 @@ angular.module('vote-app')
           position: 'bottom'
         }
       },
-      data: obj.data.votes
+      data: obj.data.votes,
+      owner: obj.data.owner
     }
   }
 
@@ -74,7 +74,7 @@ angular.module('vote-app')
         throw err;
       });
     },
-    votePoll: (scope) => {
+    votePoll: scope => {
       let vote = "";
       
       if (scope.vote === null) {
