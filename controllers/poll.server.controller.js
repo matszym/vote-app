@@ -1,11 +1,11 @@
 'use strict';
 
-const Poll = require('../models/poll.server.model.js'),
+const _ = require('underscore'),
+ip = require('request-ip'),
+Poll = require('../models/poll.server.model.js'),
 msg = require('./message.server.controller.js');
 
 exports.createPoll = (req, res) => {
-  console.log(req.user);
-
   req.body._creator = req.user._id;
 
   Poll.createAsync(req.body)
@@ -21,9 +21,32 @@ exports.createPoll = (req, res) => {
 }
 
 exports.getPoll = (req, res) => {
-  Poll.findOneByIdAsync(req.params.id)
-  .then(poll => res.send(poll))
+  Poll.findById(req.params.id)
+  .execAsync()
+  .then(poll => {
+    let votesBlueprint = poll.options.map(x => 0); // initialize votes array eg. [0, 0, 0, 0]
+
+    let options = poll.votes, 
+    reducedVotes = poll.votes.reduce((votes, o) => {
+      let i = poll.options.indexOf(o.option);
+      if (i >= 0) { // options contains the vote
+        votes[i] += 1;
+      } else { // its new vote, add the option to options
+        poll.options.push(o.option);
+        votes.push(1);
+      }
+      return votes;
+    }, votesBlueprint);
+    poll.votes = reducedVotes;
+
+    res.send({
+      title: poll.title,
+      options: poll.options,
+      votes: reducedVotes
+    })
+  })
   .catch(err => {
+    console.log(err);
     res
     .status(400)
     .send(err);
@@ -31,12 +54,38 @@ exports.getPoll = (req, res) => {
 }
 
 exports.getPolls = (req, res) => {
+  function parse(str) {
+    let parsed = parseInt(str, 10);
+
+    return parsed.toString() === str ? parsed : 0;
+  }
+
+  let response = {};
+
   Poll.find({})
   .sort('-created')
-  .limit(req.params.limit)
-  .skip(req.params.offset)
+  .limit(parse(req.query.limit))
+  .skip(parse(req.query.offset))
   .execAsync()
-  .then(polls => res.send(polls))
+  .then(polls => {
+    response.polls = polls;
+
+    return Poll.find({})
+    .count()
+    .execAsync();
+  })
+  .then(count => {
+    _.extend(response, {
+      query: {
+        count,
+        offset: parse(req.query.offset),
+        limit: parse(req.query.limit),
+        time: parse(req.query.time)
+      }
+    });
+
+    res.send(response);
+  })
   .catch(err => {
     res
     .status(400)
@@ -64,5 +113,33 @@ exports.deletePoll = (req, res) => {
     res
     .status(400)
     .send('We could not remove poll. Please try again later.');
+  });
+}
+
+exports.votePoll = (req, res, next) => {
+  if (!req.body.vote || !req.body.vote.length) {
+    next();
+  }
+
+  Poll.findByIdAsync({_id: req.params.id})
+  .then(() => {
+    return Poll.updateAsync(
+      {
+        _id: req.params.id
+      }, 
+      {
+        $push: {
+          "votes": {
+            option: req.body.vote,
+            voterIP: ip.getClientIp(req)
+          }
+        }
+      });
+  })
+  .then(doc => {
+    next();
+  })
+  .catch(err => {
+    throw err;
   });
 }
