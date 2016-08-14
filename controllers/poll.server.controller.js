@@ -42,7 +42,8 @@ exports.getPoll = (req, res) => {
     res.send({
       title: poll.title,
       options: poll.options,
-      votes: reducedVotes
+      votes: reducedVotes,
+      owner: poll._creator
     })
   })
   .catch(err => {
@@ -62,8 +63,8 @@ exports.getPolls = (req, res) => {
 
   let response = {};
 
-  Poll.find({})
-  .sort('-created')
+  Poll.find(req.pollQuery || {})
+  .sort('-createdAt')
   .limit(parse(req.query.limit))
   .skip(parse(req.query.offset))
   .execAsync()
@@ -118,7 +119,7 @@ exports.deletePoll = (req, res) => {
 
 exports.votePoll = (req, res, next) => {
   if (!req.body.vote || !req.body.vote.length) {
-    next();
+    return next();
   }
 
   Poll.findByIdAsync({_id: req.params.id})
