@@ -1,17 +1,36 @@
+<% 
+
+var libs = [
+  "lib/jquery/dist/jquery.min.js",
+  "lib/bootstrap/dist/js/bootstrap.min.js",
+  "lib/angular/angular.min.js",
+  "lib/chart.js/dist/Chart.min.js",
+  "lib/angular-chart.js/dist/angular-chart.min.js",
+  "lib/angular-route/angular-route.min.js"
+];
+
+if (domain) {
+  libs = libs.map(function(val) {
+    return '//' + domain  + '/' + val;
+  });
+}
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Vote Application</title>
-  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
-  <script src="lib/angular/angular.min.js"></script>
-  <script src="lib/angular-route/angular-route.min.js"></script>
+  <link rel="stylesheet" href="<%='//' + domain + '/'%>lib/bootstrap/dist/css/bootstrap.min.css">
+  <% libs.forEach(function(val) { %>
+  <script src="<%=val%>"></script>
+  <% }) %>
   <base href="/">
 </head>
 <body data-ng-app="vote-app" data-ng-controller="AuthenticationController">
   <navigation></navigation>
   <data-ng-view></data-ng-view>
   <% include footer.server.view.ejs %>
-  <script src="vote-app.min.js"></script>
+  <script src="<%='//' + domain + '/'%>vote-app.min.js"></script>
 </body>
 </html>
