@@ -10,6 +10,9 @@ angular.module('vote-app')
   .when('/my-polls', {
     templateUrl: 'views/my-polls.client.view.html'
   })
+  .when('/poll/:id', {
+    templateUrl: 'views/poll.client.view.html'
+  })
   .otherwise('/', {
     redirect: '/'
   });
