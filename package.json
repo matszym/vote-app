@@ -10,13 +10,17 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "3.4.1",
+    "body-parser": "1.15.2",
+    "bower-npm-resolver": "0.4.0",
     "connect-mongo": "1.3.2",
     "ejs": "2.5.1",
     "express": "4.14.0",
     "express-session": "1.14.0",
     "mongoose": "4.5.7",
     "passport": "0.3.2",
-    "passport-twitter": "1.0.4"
+    "passport-twitter": "1.0.4",
+    "request-ip": "1.2.2",
+    "underscore": "1.8.3"
   },
   "devDependencies": {
     "babel-preset-es2015": "6.9.0",

@@ -19,6 +19,9 @@
   "dependencies": {
     "angular": "^1.5.8",
     "bootstrap": "^3.3.7",
-    "angular-route": "^1.5.8"
+    "angular-route": "^1.5.8",
+    "jquery": "^3.1.0",
+    "angular-chart.js": "^1.0.0",
+    "Chart.js": "^2.2.1"
   }
 }
