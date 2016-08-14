@@ -53,8 +53,8 @@ angular.module('vote-app')
     },
     createPoll: poll => {
       $http.post('api/poll', {
-        title: 'Test',
-        options: ['a', 'b', 'c']
+        title: poll.title,
+        options: poll.options.split('\n')
       })
       .then(response => {
         $location.path(`/poll/${response.data._id}`);

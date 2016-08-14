@@ -1,13 +1,13 @@
 <section class="container" data-ng-controller="PollController">
-  <form class="jumbotron pristine" data-ng-submit="createPoll()">
+  <form class="jumbotron pristine" data-ng-submit="createPoll(poll)">
     <h1>Create new poll</h1>
       <div class="form-group">
         <label for="title">Title:</label>
-        <input type="text" id="title" class="form-control">
+        <input type="text" data-ng-model="poll.title" id="title" class="form-control">
       </div>
       <div class="form-group">
         <label for="options">Options (separated by line):</label>
-        <textarea id="options" cols="30" rows="10" class="form-control"></textarea>
+        <textarea data-ng-model="poll.options" id="options" cols="30" rows="10" class="form-control"></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Create</button>
   </form>
