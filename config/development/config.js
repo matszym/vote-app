@@ -1,5 +1,6 @@
 module.exports = {
   port: 9000,
+  domain: '127.0.0.1:9000',
   mongo: 'mongodb://localhost/vote_app',
   twitter: {
     consumerKey: process.env.VOTE_APP_TWITTER_CONSUMER_KEY,
