@@ -29,11 +29,9 @@ pollSchema = new Schema({
       type: String
     }
   }]
+},
+{
+  timestamps: true
 });
-
-pollSchema.pre('save', next => {
-  this.created = new Date();
-  next();
-})
 
 module.exports = mongoose.model('Poll', pollSchema);
