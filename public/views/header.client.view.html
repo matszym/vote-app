@@ -1,4 +1,4 @@
-<header>
+<header data-ng-controller="NavigationController">
   <nav class="navbar navbar-default">
     <div class="container">
       <div class="navbar-header">
@@ -16,7 +16,8 @@
           <li data-ng-show="auth.user.isAuthenticated"><a href="/my-polls">My Polls</a></li>
           <li data-ng-show="auth.user.isAuthenticated"><a href="/new-poll">New Pool</a></li>
           <li data-ng-show="auth.user.isAuthenticated"><a href="" data-ng-click="logOut()" data-ng-bind="auth.user.name"></a></li>
-          <li class="navbar-form" data-ng-hide="auth.user.isAuthenticated"><a href="auth/twitter" target="_blank"><button class="btn btn-primary btn-nav" type="button">Log in with twitter</button></a>
+          <li class="navbar-form" data-ng-hide="auth.user.isAuthenticated">
+            <button class="btn btn-primary" data-ng-click="twitterAuth()">Log in with twitter</button>
           </li>
         </ul>
       </div>
