@@ -4,7 +4,7 @@ const mongoose = require('mongoose'),
 Schema = mongoose.Schema,
 pollSchema = new Schema({
   _creator: {
-    type: Number,
+    type: String,
     ref: 'User',
     required: true
   },
@@ -19,10 +19,11 @@ pollSchema = new Schema({
   votes: [{
     option: {
       type: String,
+      required: true,
       valdiate: {
-        validator: v => this.options.indexOf(v) !== -1
+        validator: v => !!v.length
       },
-      message: 'Option doesn\'t exist'
+      message: 'Option cannot be empty'
     },
     voterIP: {
       type: String
