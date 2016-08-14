@@ -4,6 +4,7 @@
 let express = require('express'),
 app = express(),
 morgan = require('morgan'),
+bodyParser = require('body-parser'),
 session = require('express-session'),
 MongoStore = require('connect-mongo')(session),
 config = require('./config/config.js'),
@@ -32,6 +33,9 @@ app.use(session({
   saveUninitialized: true
 
 }));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.get('/auth/twitter', passport.authenticate('twitter'));
