@@ -1,24 +1,11 @@
-<section class="container">
+<section class="container" data-ng-controller="AllPollsController">
   <div class="jumbotron">
     <h1>Polls</h1>
     <ul class="list-group">
-      <li class="list-group-item">Poll 1</li>
-      <li class="list-group-item">Who is going to be next USA president?</li>
-      <li class="list-group-item">What games do you play?</li>
-      <li class="list-group-item">Should UK leave European Union?</li>
-      <li class="list-group-item">Are you going to play World of Warcraft legion?</li>
-      <li class="list-group-item">How old are you</li>
-      <li class="list-group-item">What is your favourite opera?</li>
-      <li class="list-group-item">Are you a programmer?</li>
-      <li class="list-group-item">Where did you go on holidays?</li>
-      <li class="list-group-item">Do you watch Mr Robot?</li>
+      <li class="list-group-item" data-ng-repeat="poll in polls"><a data-ng-href="poll/{{poll._id}}" data-ng-bind="poll.title"></a></li>
     </ul>
     <div class="btn-group offset-6">
-      <button type='button' class='btn btn-primary'>1</button>
-      <button type='button' class='btn btn-primary'>2</button>
-      <button type='button' class='btn btn-primary'>3</button>
-      <button type='button' class='btn btn-primary'>4</button>
-      <button type='button' class='btn btn-primary'>5</button>
+      <button type='button' class='btn btn-primary' data-ng-repeat="item in range" data-ng-bind="$index + 1" data-ng-click="getPolls(item.query)"></button>
     </div>
   </div>
 </section>
