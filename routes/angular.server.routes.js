@@ -6,12 +6,14 @@
 
 const angularEndpoints = [
   '/new-poll', 
-  '/my-polls'
-];
+  '/my-polls',
+  '/poll/:id'
+],
+config = require('../config/config.js');
 
 module.exports = app => {
   app.route(angularEndpoints)
   .get((req, res) => {
-    res.render('index.ejs');
+    res.render('index.ejs', config);
   });
 }
