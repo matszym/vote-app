@@ -1,0 +1,29 @@
+<div class="container" data-ng-controller="ChartController">
+  <div class="jumbotron container">
+    <h2 data-ng-bind="poll.title"></h2>
+    <div class="row">
+      <div class="col-md-4">
+        <form>
+          <div class="form-group">
+            <label for="option">I'd like to vote for:</label>
+            <select id="option" class="form-control" data-ng-model="vote" data-ng-options="option.value as option.label for option in poll.selectBoxOptions">
+              <option value="" selected disabled hidden>Choose an option...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input data-ng-show="vote === null" class="form-control" data-ng-model="customOption" type="text">
+          </div>
+          <div class="form-group">
+            <a class="btn btn-primary btn-block" data-ng-click="votePoll()">Submit</a>
+          </div>
+          <div class="form-gorup">
+            <a class="btn btn-primary btn-block">Share on twitter</a>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-8">
+        <canvas class="chart chart-pie" chart-data="poll.data" chart-labels="poll.labels" chart-options="poll.options"></canvas>
+      </div>  
+    </div>
+  </div>
+</div>
