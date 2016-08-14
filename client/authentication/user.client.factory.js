@@ -1,5 +1,5 @@
 angular.module('authentication')
-.factory('user', ['$http', $http => {
+.factory('user', ['$http', '$rootScope', ($http, $rootScope) => {
   function isAuthenticated() {
     return !angular.equals({}, user);
   }
@@ -15,6 +15,7 @@ angular.module('authentication')
           if (isAuthenticated()) {
             user.isAuthenticated = true;
           }
+          $rootScope.$broadcast('user', user);
           scope.user = user;
         })
         .catch(err => {
@@ -27,6 +28,7 @@ angular.module('authentication')
         scope.user = user;
       }
     },
+    getUser: () => user,
     logOut: (scope) => {
       $http.get('/auth/logout')
       .then(() => {
@@ -34,6 +36,7 @@ angular.module('authentication')
           isAuthenticated: false
         };
         scope.user = user;
+        $rootScope.$broadcast('user', user);
       })
       .catch(err => {
         user = {
