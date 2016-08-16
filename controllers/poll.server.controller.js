@@ -136,10 +136,6 @@ exports.deletePoll = (req, res) => {
 }
 
 exports.votePoll = (req, res, next) => {
-  if (!req.body.vote || !req.body.vote.length) {
-    return next();
-  }
-
   Poll.findByIdAsync({_id: req.params.id})
   .then(() => {
     return Poll.updateAsync(
@@ -161,4 +157,22 @@ exports.votePoll = (req, res, next) => {
   .catch(err => {
     throw err;
   });
+}
+
+exports.ensureSingleVote = (req, res, next) => {
+  if (!req.body.vote || !req.body.vote.length) {
+    return res.status(400).send('Vote not recognized');
+  }
+
+  Poll.findByIdAsync({_id: req.params.id})
+  .then((poll) => {
+    if (poll.votes.some(x => x.voterIP === ip.getClientIp(req))) {
+      res.status(400).send(msg('You have already voted in this poll', 'danger'))
+    } else {
+      next();
+    }
+  })
+  .catch(err => {
+    throw err;
+  })
 }
