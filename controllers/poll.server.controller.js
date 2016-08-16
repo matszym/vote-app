@@ -107,6 +107,24 @@ exports.getAllResults = (req, res) => {
   })
 }
 
+exports.isAuthorized = (req, res, next) => {
+  Poll.findByIdAsync({_id: req.params.id})
+  .then(poll => {
+    if (poll._creator.toString() === req.user._id.toString()) {
+      next();
+    } else {
+      res
+      .status(401)
+      .send('You are not authorized to remove this poll');
+    }
+  })
+  .catch(err => {
+    res
+    .status(400)
+    .send('Poll not found');
+  });
+}
+
 exports.deletePoll = (req, res) => {
   Poll.removeAsync({_id: req.params.id})
   .then(poll => res.send(msg(`Poll ${poll.name} removed.`)))
