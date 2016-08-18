@@ -29,6 +29,7 @@ if (domain) {
 </head>
 <body data-ng-app="vote-app" data-ng-controller="AuthenticationController">
   <navigation></navigation>
+  <messages></messages>
   <data-ng-view></data-ng-view>
   <% include footer.server.view.ejs %>
   <script src="<%='//' + domain + '/'%>vote-app.min.js"></script>
