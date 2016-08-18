@@ -1,4 +1,6 @@
 <section data-ng-controller="MessagesController" class="container">
-  <div data-ng-repeat="msg in messages" data-ng-class="msg.class" data-ng-bind="msg.content">
+  <div data-ng-repeat="msg in messages" data-ng-class="msg.class" role="alert">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <div data-ng-bind="msg.content"></div>
   </div>
 </section>

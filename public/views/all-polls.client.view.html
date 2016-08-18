@@ -1,11 +1,12 @@
-<section class="container" data-ng-controller="AllPollsController">
-  <div class="jumbotron">
-    <h1>Polls</h1>
-    <ul class="list-group">
-      <li class="list-group-item" data-ng-repeat="poll in polls"><a data-ng-href="poll/{{poll._id}}" data-ng-bind="poll.title"></a></li>
-    </ul>
-    <div class="btn-group offset-6">
-      <button type='button' class='btn btn-primary' data-ng-repeat="item in range" data-ng-bind="$index + 1" data-ng-click="getPolls(item.query)"></button>
-    </div>
-  </div>
-</section>
+<div ng-show="polls.length === 0">
+  <p>There are no polls to display. You can <a href="/new-poll">crate one</a>, if you want.</p>
+</div>
+<div ng-hide="polls.length === 0">
+  <ul class="list-group">
+    <li class="list-group-item" data-ng-repeat="poll in polls"><a data-ng-href="poll/{{poll._id}}" data-ng-bind="poll.title"></a></li>
+  </ul>
+  <div class="btn-group offset-6" data-ng-show="{{polls.length > 10}}">
+    <button type='button' class='btn btn-primary' data-ng-repeat="item in range" data-ng-bind="$index + 1" data-ng-click="getPolls(item.query)"></button>
+  </div>  
+</div>
+

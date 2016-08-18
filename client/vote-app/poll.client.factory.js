@@ -29,9 +29,15 @@ angular.module('vote-app')
 
   return {
     getPolls: (scope, query) => {
-      $http.get(`api/polls/?limit=${query.limit}&offset=${query.offset}&time=${Date.now()}`)
+      let uri = `api/polls/?limit=${query.limit}&offset=${query.offset}&time=${Date.now()}`;
+
+      if (scope.queryParam._creator) {
+        uri += `&user=${scope.queryParam._creator}`;
+      }
+
+      $http.get(uri)
       .then(response => {
-        if (scope.polls && scope.query.time - response.data.time > 0) {
+        if (scope.polls && scope.query && scope.query.time - response.data.time > 0) {
           console.log('Ignoring old request');
           return;
         }
@@ -75,7 +81,7 @@ angular.module('vote-app')
       });
     },
     deletePoll: id => {
-      $http.delete(`/api/poll/${$routeparams.id}`)
+      $http.delete(`/api/poll/${$routeParams.id}`)
       .then(result => {
         $location.path('/my-polls');
       })

@@ -61,9 +61,14 @@ exports.getPolls = (req, res) => {
     return parsed.toString() === str ? parsed : 0;
   }
 
+  const query = {};
   let response = {};
 
-  Poll.find(req.pollQuery || {})
+  if (req.query.user) {
+    query._creator = req.query.user;
+  }
+
+  Poll.find(query)
   .sort('-createdAt')
   .limit(parse(req.query.limit))
   .skip(parse(req.query.offset))

@@ -2,7 +2,7 @@ angular.module('vote-app')
 .config(['$routeProvider', '$locationProvider', ($routeProvider, $locationProvider) => {
   $routeProvider
   .when('/', {
-    templateUrl: 'views/all-polls.client.view.html'
+    templateUrl: 'views/polls.client.view.html'
   })
   .when('/new-poll', {
     templateUrl: 'views/new-poll.client.view.html'
