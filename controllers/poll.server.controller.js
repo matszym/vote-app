@@ -161,7 +161,7 @@ exports.votePoll = (req, res, next) => {
 
 exports.ensureSingleVote = (req, res, next) => {
   if (!req.body.vote || !req.body.vote.length) {
-    return res.status(400).send('Vote not recognized');
+    return res.status(400).send(msg('Vote not recognized', 'danger'));
   }
 
   Poll.findByIdAsync({_id: req.params.id})
