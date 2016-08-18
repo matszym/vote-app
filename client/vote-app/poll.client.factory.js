@@ -1,5 +1,5 @@
 angular.module('vote-app')
-.factory('poll', ['$http', '$location', '$routeParams', ($http, $location, $routeParams) => {
+.factory('poll', ['$http', '$location', '$routeParams', 'messages', ($http, $location, $routeParams, messages) => {
   function transform(obj) {
     let options = obj.data.options.map(option => {
       return {
@@ -96,9 +96,7 @@ angular.module('vote-app')
       .then(result => {
         scope.poll = transform(result);
       })
-      .catch(err => {
-        throw err;
-      });
+      .catch(messages.handleErrors);
     }
   }
 }]);
