@@ -6,7 +6,8 @@ var libs = [
   "lib/angular/angular.min.js",
   "lib/chart.js/dist/Chart.min.js",
   "lib/angular-chart.js/dist/angular-chart.min.js",
-  "lib/angular-route/angular-route.min.js"
+  "lib/angular-route/angular-route.min.js",
+  "lib/angular-cookies/angular-cookies.min.js"
 ];
 
 if (domain) {
@@ -29,6 +30,7 @@ if (domain) {
 </head>
 <body data-ng-app="vote-app" data-ng-controller="AuthenticationController">
   <navigation></navigation>
+  <cookies-warning>This site is using cookies, in order to provide best experience. You can learn more <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP_cookie">here</a></cookies-warning>
   <messages></messages>
   <data-ng-view></data-ng-view>
   <% include footer.server.view.ejs %>
