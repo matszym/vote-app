@@ -1,1 +1,1 @@
-angular.module('vote-app', ['chart.js', 'navigation', 'authentication', 'ngRoute', 'messages']);
+angular.module('vote-app', ['chart.js', 'navigation', 'authentication', 'ngRoute', 'messages', 'cookiesWarning']);
