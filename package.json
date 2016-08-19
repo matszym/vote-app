@@ -4,7 +4,8 @@
   "description": "vote app for free code camp",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "bower install && cd public/lib/Chart.js && npm install && gulp build"
   },
   "author": "Mateusz Szymański",
   "license": "MIT",
