@@ -1,6 +1,7 @@
 const gulp = require('gulp'),
 sourcemaps = require('gulp-sourcemaps'),
 concat = require('gulp-concat'),
+minify = require('gulp-minify'),
 babel = require('gulp-babel'),
 browserSync = require('browser-sync');
 
@@ -14,10 +15,15 @@ paths = {
 gulp.task('javascript', () => {
   return gulp.src(paths.jsFiles)
   .pipe(sourcemaps.init())
+  .pipe(concat('vote-app.js'))
   .pipe(babel({
     presets: ['es2015']
   }))
-  .pipe(concat('vote-app.min.js'))
+  .pipe(minify({
+    ext: {
+      min: '.min.js'
+    }
+  }))
   .pipe(sourcemaps.write('.'))
   .pipe(gulp.dest('public'));
 });
