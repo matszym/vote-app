@@ -3,6 +3,7 @@
 
 let express = require('express'),
 app = express(),
+http = require('http'),
 morgan = require('morgan'),
 bodyParser = require('body-parser'),
 session = require('express-session'),
@@ -11,8 +12,9 @@ config = require('./config/config.js'),
 passport = require('passport'),
 mongoose = require('mongoose'),
 Promise = require('bluebird'),
+io,
 db,
-server;
+server = http.createServer(app);
 
 require('./config/passport.js')();
 let userCtrl = require('./controllers/user.server.controller.js');
@@ -46,12 +48,15 @@ app.get('/auth/twitter/callback',
   }
 );
 
-require('./routes/poll.server.routes.js')(app);
+io = require('socket.io').listen(server);
+
+require('./routes/poll.server.routes.js')(app, io);
 require('./routes/index.server.routes.js')(app);
 require('./routes/auth.server.routes.js')(app);
 require('./routes/angular.server.routes.js')(app);
 
 app.use(express.static('public'));
 
-server = app.listen(config.port);
+server.listen(config.port);
+
 console.log('Server is listening on', config.port);
