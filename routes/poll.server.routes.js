@@ -3,7 +3,7 @@
 const pollCtrl = require('../controllers/poll.server.controller.js'),
 userCtrl = require('../controllers/user.server.controller.js');
 
-module.exports = app => {
+module.exports = (app, io) => {
   
   app.route('/api/poll')
   .post(userCtrl.isAuthenticated, pollCtrl.createPoll);
@@ -12,7 +12,7 @@ module.exports = app => {
   .get(pollCtrl.getPolls);
 
   app.route('/api/poll/:id')
-  .get(pollCtrl.getPoll)
+  .get(pollCtrl.getPoll(io))
   .delete(userCtrl.isAuthenticated, pollCtrl.isAuthorized, pollCtrl.deletePoll)
-  .put(pollCtrl.ensureSingleVote, pollCtrl.votePoll, pollCtrl.getPoll);
+  .put(pollCtrl.votePoll(io), pollCtrl.getPoll(io));
 }

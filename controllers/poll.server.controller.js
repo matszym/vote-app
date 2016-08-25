@@ -20,38 +20,47 @@ exports.createPoll = (req, res) => {
   });
 }
 
-exports.getPoll = (req, res) => {
-  Poll.findById(req.params.id)
-  .execAsync()
-  .then(poll => {
-    let votesBlueprint = poll.options.map(x => 0); // initialize votes array eg. [0, 0, 0, 0]
+exports.transformPoll = poll => {
+  let votesBlueprint = poll.options.map(x => 0); // initialize votes array eg. [0, 0, 0, 0]
+  
+  let options = poll.votes, 
+  reducedVotes = poll.votes.reduce((votes, o) => {
+    let i = poll.options.indexOf(o.option);
+  
+    if (i >= 0) { // options contains the vote
+      votes[i] += 1;
+    } else { // its new vote, add the option to options
+      poll.options.push(o.option);
+      votes.push(1);
+    }
 
-    let options = poll.votes, 
-    reducedVotes = poll.votes.reduce((votes, o) => {
-      let i = poll.options.indexOf(o.option);
-      if (i >= 0) { // options contains the vote
-        votes[i] += 1;
-      } else { // its new vote, add the option to options
-        poll.options.push(o.option);
-        votes.push(1);
-      }
-      return votes;
-    }, votesBlueprint);
-    poll.votes = reducedVotes;
+    return votes;
+  }, votesBlueprint);
 
-    res.send({
-      title: poll.title,
-      options: poll.options,
-      votes: reducedVotes,
-      owner: poll._creator
+  poll.votes = reducedVotes;
+
+  return {
+    title: poll.title,
+    options: poll.options,
+    votes: reducedVotes,
+    owner: poll._creator
+  }
+}
+
+exports.getPoll = io => {
+  return (req, res) => {
+    Poll.findById(req.params.id)
+    .execAsync()
+    .then(poll => {
+      io.of(`/${req.params.id}`);
+      res.send(exports.transformPoll(poll));
     })
-  })
-  .catch(err => {
-    console.log(err);
-    res
-    .status(400)
-    .send(err);
-  })
+    .catch(err => {
+      res
+      .status(400)
+      .send(err);
+    })
+  }
 }
 
 exports.getPolls = (req, res) => {
@@ -140,28 +149,36 @@ exports.deletePoll = (req, res) => {
   });
 }
 
-exports.votePoll = (req, res, next) => {
-  Poll.findByIdAsync({_id: req.params.id})
-  .then(() => {
-    return Poll.updateAsync(
-      {
-        _id: req.params.id
-      }, 
-      {
-        $push: {
-          "votes": {
-            option: req.body.vote,
-            voterIP: ip.getClientIp(req)
+exports.votePoll = io => {
+  return (req, res, next) => {
+    Poll.findByIdAsync({_id: req.params.id})
+    .then(() => {
+      return Poll.updateAsync(
+        {
+          _id: req.params.id
+        }, 
+        {
+          $push: {
+            "votes": {
+              option: req.body.vote,
+              voterIP: ip.getClientIp(req)
+            }
           }
-        }
-      });
-  })
-  .then(doc => {
-    next();
-  })
-  .catch(err => {
-    throw err;
-  });
+        });
+    })
+    .then(numAffected => 
+      Poll.findByIdAsync({_id: req.params.id}
+    ))
+    .then(doc => {
+      io.of(`/${req.params.id}`)
+      .emit('chartUpdate', exports.transformPoll(doc));
+
+      next();
+    })
+    .catch(err => {
+      throw err;
+    });
+  }
 }
 
 exports.ensureSingleVote = (req, res, next) => {
