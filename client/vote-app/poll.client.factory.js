@@ -1,33 +1,32 @@
 angular.module('vote-app')
 .factory('poll', ['$http', '$location', '$routeParams', 'messages', ($http, $location, $routeParams, messages) => {
-  function transform(obj) {
-    let options = obj.data.options.map(option => {
-      return {
-        label: option,
-        value: option
-      }
-    });
-
-    options.push({
-      label: "I'd like custom option",
-      value: null
-    });
-    return {
-      title: obj.data.title,
-      labels: obj.data.options,
-      selectBoxOptions: options,
-      options: {
-        legend: {
-          display: true,
-          position: 'bottom'
+  const factory = {
+    transform: data => {
+      let options = data.options.map(option => {
+        return {
+          label: option,
+          value: option
         }
-      },
-      data: obj.data.votes,
-      owner: obj.data.owner
-    }
-  }
+      });
 
-  return {
+      options.push({
+        label: "I'd like custom option",
+        value: null
+      });
+      return {
+        title: data.title,
+        labels: data.options,
+        selectBoxOptions: options,
+        options: {
+          legend: {
+            display: true,
+            position: 'bottom'
+          }
+        },
+        data: data.votes,
+        owner: data.owner
+      }
+    },
     getPolls: (scope, query) => {
       let uri = `api/polls/?limit=${query.limit}&offset=${query.offset}&time=${Date.now()}`;
 
@@ -69,13 +68,8 @@ angular.module('vote-app')
         throw err;
       });
     },
-    getPoll: scope => {
-      $http.get(`/api/poll/${$routeParams.id}`)
-      .then(result => {
-
-
-        scope.poll = transform(result);
-      })
+    getPoll: () => {
+      return $http.get(`/api/poll/${$routeParams.id}`)
       .catch(err => {
         throw err;
       });
@@ -100,9 +94,11 @@ angular.module('vote-app')
 
       $http.put(`/api/poll/${$routeParams.id}`, { vote })
       .then(result => {
-        scope.poll = transform(result);
+        scope.poll = factory.transform(result.data);
       })
       .catch(messages.handleErrors);
     }
   }
+
+  return factory;
 }]);
