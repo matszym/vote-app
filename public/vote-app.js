@@ -4,7 +4,7 @@ angular.module('authentication', []);
 angular.module('cookiesWarning', ['ngCookies']);
 angular.module('messages', []);
 angular.module('navigation', ['authentication']);
-angular.module('vote-app', ['chart.js', 'navigation', 'authentication', 'ngRoute', 'messages', 'cookiesWarning']);
+angular.module('vote-app', ['chart.js', 'navigation', 'authentication', 'ngRoute', 'messages', 'cookiesWarning', 'btford.socket-io']);
 
 angular.module('authentication').controller('AuthenticationController', ['$scope', 'user', function ($scope, user) {
   $scope.auth = {};
@@ -159,10 +159,21 @@ angular.module('vote-app').directive('allPolls', function () {
     templateUrl: 'views/all-polls.client.view.html'
   };
 });
-angular.module('vote-app').controller('ChartController', ['$scope', 'poll', 'user', function ($scope, poll, user) {
+angular.module('vote-app').controller('ChartController', ['$scope', 'poll', 'user', 'socketFactory', '$routeParams', function ($scope, poll, user, socketFactory, $routeParams) {
   $scope.user = user.getUser();
   $scope.vote = "";
-  poll.getPoll($scope);
+
+  poll.getPoll().then(function (result) {
+    $scope.poll = poll.transform(result.data);
+
+    // we can join the socket.io namespace now
+    var ioSocket = io.connect('/' + $routeParams.id),
+        mySocket = socketFactory({ ioSocket: ioSocket });
+
+    mySocket.on('chartUpdate', function (data) {
+      $scope.poll = poll.transform(data);
+    });
+  });
 
   $scope.votePoll = poll.votePoll.bind(null, $scope);
   $scope.deletePoll = poll.deletePoll;
@@ -180,34 +191,33 @@ angular.module('vote-app').controller('PollController', ['poll', '$scope', funct
   $scope.createPoll = poll.createPoll;
 }]);
 angular.module('vote-app').factory('poll', ['$http', '$location', '$routeParams', 'messages', function ($http, $location, $routeParams, messages) {
-  function transform(obj) {
-    var options = obj.data.options.map(function (option) {
+  var factory = {
+    transform: function transform(data) {
+      var options = data.options.map(function (option) {
+        return {
+          label: option,
+          value: option
+        };
+      });
+
+      options.push({
+        label: "I'd like custom option",
+        value: null
+      });
       return {
-        label: option,
-        value: option
+        title: data.title,
+        labels: data.options,
+        selectBoxOptions: options,
+        options: {
+          legend: {
+            display: true,
+            position: 'bottom'
+          }
+        },
+        data: data.votes,
+        owner: data.owner
       };
-    });
-
-    options.push({
-      label: "I'd like custom option",
-      value: null
-    });
-    return {
-      title: obj.data.title,
-      labels: obj.data.options,
-      selectBoxOptions: options,
-      options: {
-        legend: {
-          display: true,
-          position: 'bottom'
-        }
-      },
-      data: obj.data.votes,
-      owner: obj.data.owner
-    };
-  }
-
-  return {
+    },
     getPolls: function getPolls(scope, query) {
       var uri = 'api/polls/?limit=' + query.limit + '&offset=' + query.offset + '&time=' + Date.now();
 
@@ -245,11 +255,8 @@ angular.module('vote-app').factory('poll', ['$http', '$location', '$routeParams'
         throw err;
       });
     },
-    getPoll: function getPoll(scope) {
-      $http.get('/api/poll/' + $routeParams.id).then(function (result) {
-
-        scope.poll = transform(result);
-      }).catch(function (err) {
+    getPoll: function getPoll() {
+      return $http.get('/api/poll/' + $routeParams.id).catch(function (err) {
         throw err;
       });
     },
@@ -270,10 +277,12 @@ angular.module('vote-app').factory('poll', ['$http', '$location', '$routeParams'
       }
 
       $http.put('/api/poll/' + $routeParams.id, { vote: vote }).then(function (result) {
-        scope.poll = transform(result);
+        scope.poll = factory.transform(result.data);
       }).catch(messages.handleErrors);
     }
   };
+
+  return factory;
 }]);
 
 angular.module('vote-app').config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
