@@ -14,5 +14,5 @@ module.exports = (app, io) => {
   app.route('/api/poll/:id')
   .get(pollCtrl.getPoll(io))
   .delete(userCtrl.isAuthenticated, pollCtrl.isAuthorized, pollCtrl.deletePoll)
-  .put(pollCtrl.votePoll(io), pollCtrl.getPoll(io));
+  .put(pollCtrl.ensureSingleVote, pollCtrl.votePoll(io), pollCtrl.getPoll(io));
 }
