@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('authentication', []);
-angular.module('cookiesWarning', ['ngCookies']);
 angular.module('messages', []);
+angular.module('cookiesWarning', ['ngCookies']);
 angular.module('navigation', ['authentication']);
 angular.module('vote-app', ['chart.js', 'navigation', 'authentication', 'ngRoute', 'messages', 'cookiesWarning', 'btford.socket-io']);
 
@@ -63,34 +63,6 @@ angular.module('authentication').factory('user', ['$http', '$rootScope', functio
   };
 }]);
 
-angular.module('cookiesWarning').factory('cookie', ['$rootScope', '$cookies', function ($rootScope, $cookies) {
-  return {
-    isAccepted: function isAccepted() {
-      return !!$cookies.get('cookiesPolicyAccepted');
-    },
-    accept: function accept() {
-      $cookies.put('cookiesPolicyAccepted', true);
-      $rootScope.$broadcast('cookiesPolicyAccepted');
-    }
-  };
-}]);
-angular.module('cookiesWarning').directive('cookiesWarning', function () {
-  return {
-    restrict: 'E',
-    transclude: true,
-    controller: 'CookiesWarningController',
-    templateUrl: 'views/cookies-policy.client.view.html'
-  };
-});
-angular.module('cookiesWarning').controller('CookiesWarningController', ['$scope', 'cookie', function ($scope, cookie) {
-  $scope.isAccepted = cookie.isAccepted();
-
-  $scope.accept = cookie.accept;
-
-  $scope.$on('cookiesPolicyAccepted', function () {
-    $scope.isAccepted = true;
-  });
-}]);
 angular.module('messages').controller('MessagesController', ['$scope', function ($scope) {
   $scope.message = [];
 
@@ -124,6 +96,34 @@ angular.module('messages').factory('messages', ['$rootScope', function ($rootSco
   };
 }]);
 
+angular.module('cookiesWarning').factory('cookie', ['$rootScope', '$cookies', function ($rootScope, $cookies) {
+  return {
+    isAccepted: function isAccepted() {
+      return !!$cookies.get('cookiesPolicyAccepted');
+    },
+    accept: function accept() {
+      $cookies.put('cookiesPolicyAccepted', true);
+      $rootScope.$broadcast('cookiesPolicyAccepted');
+    }
+  };
+}]);
+angular.module('cookiesWarning').directive('cookiesWarning', function () {
+  return {
+    restrict: 'E',
+    transclude: true,
+    controller: 'CookiesWarningController',
+    templateUrl: 'views/cookies-policy.client.view.html'
+  };
+});
+angular.module('cookiesWarning').controller('CookiesWarningController', ['$scope', 'cookie', function ($scope, cookie) {
+  $scope.isAccepted = cookie.isAccepted();
+
+  $scope.accept = cookie.accept;
+
+  $scope.$on('cookiesPolicyAccepted', function () {
+    $scope.isAccepted = true;
+  });
+}]);
 angular.module('navigation').controller('NavigationController', ['$scope', '$window', function ($scope, $window) {
   $scope.twitterAuth = function () {
     return $window.location.assign('/auth/twitter');
